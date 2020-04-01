@@ -1,0 +1,32 @@
+﻿<Window x:Class="HullRotate.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HullRotate"
+        mc:Ignorable="d"
+        Title="Hull Rotator" Height="450" Width="800">
+    <DockPanel>
+        <ToolBarTray Background="White" DockPanel.Dock="Top">
+            <ToolBar Band="0
+                     " BandIndex="1">
+                <Menu >
+                    <MenuItem Header="_File">
+                        <MenuItem Header="Open" Click="openClick"/>
+                        <MenuItem Header="Save" Click="saveClick"/>
+                    </MenuItem>
+                </Menu>
+            </ToolBar>
+            <ToolBar Band="0" BandIndex="2">
+
+                <Button Click="UpClick">Up</Button>
+                <Button Click="DownClick">Down</Button>
+                <Button Click="LeftClick">Left</Button>
+                <Button Click="RightClick">Right</Button>
+            </ToolBar>
+        </ToolBarTray>
+        <Canvas Name="myCanvas"/>
+
+
+    </DockPanel>
+</Window>
