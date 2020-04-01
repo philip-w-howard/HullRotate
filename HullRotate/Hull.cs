@@ -1,4 +1,7 @@
-﻿using System;
+﻿//******************************************************
+// Class to represent a hull as a sequence of bulkheads
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
