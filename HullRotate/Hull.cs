@@ -113,6 +113,27 @@ namespace HullRotate
 
                 }
             }
+
+            for (int chine = 0; chine < m_numChines; chine++)
+            {
+                for (int bulkhead = 0; bulkhead < m_numBulkheads-1; bulkhead++)
+                {
+                    Line myLine = new Line();
+
+                    myLine.Stroke = System.Windows.Media.Brushes.Gray;
+
+                    myLine.X1 = bulkheads[bulkhead, chine, 0];
+                    myLine.X2 = bulkheads[bulkhead + 1, chine, 0];
+                    myLine.Y1 = bulkheads[bulkhead, chine, 1];
+                    myLine.Y2 = bulkheads[bulkhead + 1, chine, 1];
+
+                    myLine.StrokeThickness = 1;
+
+                    canvas.Children.Add(myLine);
+
+                }
+            }
+
         }
 
         private int m_numChines;
