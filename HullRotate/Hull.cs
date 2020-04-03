@@ -15,6 +15,41 @@ namespace HullRotate
     {
         public Hull() { }
 
+        public string UnitCube()
+        {
+            m_numBulkheads = 2;
+            m_numChines = 4;
+
+            m_bulkheads = new double[m_numBulkheads][,];
+            for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
+            {
+                m_bulkheads[bulkhead] = new double[m_numChines, 3];
+            }
+
+            for (int bulkhead=0; bulkhead<m_numBulkheads; bulkhead++)
+            {
+                m_bulkheads[bulkhead][0, 0] = 0;
+                m_bulkheads[bulkhead][0, 1] = 0;
+                m_bulkheads[bulkhead][0, 2] = bulkhead;
+
+                m_bulkheads[bulkhead][1, 0] = 1;
+                m_bulkheads[bulkhead][1, 1] = 0;
+                m_bulkheads[bulkhead][1, 2] = bulkhead;
+
+                m_bulkheads[bulkhead][2, 0] = 1;
+                m_bulkheads[bulkhead][2, 1] = 1;
+                m_bulkheads[bulkhead][2, 2] = bulkhead;
+
+                m_bulkheads[bulkhead][3, 0] = 0;
+                m_bulkheads[bulkhead][3, 1] = 1;
+                m_bulkheads[bulkhead][3, 2] = bulkhead;
+            }
+
+            PrepareDrawing();
+
+            return "";
+        }
+
         public string LoadFromHullFile(string filename)
         {
             string[] lines = System.IO.File.ReadAllLines(filename);
@@ -43,20 +78,14 @@ namespace HullRotate
                 }
             }
 
+            PrepareDrawing();
+
             return "";
         }
 
         public void Draw(Canvas canvas)
         {
             canvas.Children.Clear();
-
-            double[][,] bulkheads = m_drawnBulkheads;
-            for (int bulkhead=0; bulkhead<m_numBulkheads; bulkhead++)
-            {
-                bulkheads[bulkhead] = m_drawnBulkheads[bulkhead];
-                Array.Copy(m_drawnBulkheads[bulkhead], bulkheads[bulkhead], m_drawnBulkheads[bulkhead].Length);
-            }
-            // Do projection
 
             // Get size
             double min_x = double.MaxValue;
@@ -68,8 +97,8 @@ namespace HullRotate
             {
                 for (int chine = 0; chine < m_numChines; chine++)
                 {
-                    double x = bulkheads[bulkhead][chine, 0];
-                    double y = bulkheads[bulkhead][chine, 1];
+                    double x = m_drawnBulkheads[bulkhead][chine, 0];
+                    double y = m_drawnBulkheads[bulkhead][chine, 1];
                     if (x > max_x) max_x = x;
                     if (y > max_y) max_y = y;
                     if (x < min_x) min_x = x;
@@ -83,24 +112,24 @@ namespace HullRotate
 
             double scale = scale1;
             if (scale2 < scale) scale = scale2;
-            double shift_x = -min_x + 0.1 * scale;
-            double shift_y = -min_y + 0.1 * scale;
             scale = 0.8 * scale;
+
+            Console.WriteLine("Scale: {0}", scale);
 
             for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
             {
                 for (int chine = 0; chine < m_numChines; chine++)
                 {
-                    bulkheads[bulkhead][chine, 0] += shift_x;
-                    bulkheads[bulkhead][chine, 1] += shift_y;
-
-                    bulkheads[bulkhead][chine, 0] *= scale;
-                    bulkheads[bulkhead][chine, 1] *= scale;
+                    m_drawnBulkheads[bulkhead][chine, 0] *= scale;
+                    m_drawnBulkheads[bulkhead][chine, 1] *= scale;
+                    m_drawnBulkheads[bulkhead][chine, 2] *= scale;
 
                     // Flip in Y direction
-                    bulkheads[bulkhead][chine, 1] = canvas.ActualHeight - bulkheads[bulkhead][chine, 1];
+                    //                    bulkheads[bulkhead][chine, 1] = canvas.ActualHeight - bulkheads[bulkhead][chine, 1];
                 }
             }
+
+            CenterTo(canvas.ActualWidth/2, canvas.ActualHeight/2, 0);
 
             for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
             {
@@ -110,10 +139,10 @@ namespace HullRotate
 
                     myLine.Stroke = System.Windows.Media.Brushes.Black;
 
-                    myLine.X1 = bulkheads[bulkhead][chine, 0];
-                    myLine.X2 = bulkheads[bulkhead][chine + 1, 0];
-                    myLine.Y1 = bulkheads[bulkhead][chine, 1];
-                    myLine.Y2 = bulkheads[bulkhead][chine + 1, 1];
+                    myLine.X1 = m_drawnBulkheads[bulkhead][chine, 0];
+                    myLine.X2 = m_drawnBulkheads[bulkhead][chine + 1, 0];
+                    myLine.Y1 = m_drawnBulkheads[bulkhead][chine, 1];
+                    myLine.Y2 = m_drawnBulkheads[bulkhead][chine + 1, 1];
 
                     myLine.StrokeThickness = 1;
 
@@ -129,10 +158,10 @@ namespace HullRotate
 
                     myLine.Stroke = System.Windows.Media.Brushes.Gray;
 
-                    myLine.X1 = bulkheads[bulkhead][chine, 0];
-                    myLine.X2 = bulkheads[bulkhead + 1][chine, 0];
-                    myLine.Y1 = bulkheads[bulkhead][chine, 1];
-                    myLine.Y2 = bulkheads[bulkhead + 1][chine, 1];
+                    myLine.X1 = m_drawnBulkheads[bulkhead][chine, 0];
+                    myLine.X2 = m_drawnBulkheads[bulkhead + 1][chine, 0];
+                    myLine.Y1 = m_drawnBulkheads[bulkhead][chine, 1];
+                    myLine.Y2 = m_drawnBulkheads[bulkhead + 1][chine, 1];
 
                     myLine.StrokeThickness = 1;
 
@@ -162,6 +191,8 @@ namespace HullRotate
             rotate[1, 2] = Math.Sin(angle);
             rotate[2, 1] = -Math.Sin(angle);
 
+            CenterTo(0,0,0);
+
             for (int ii = 0; ii < m_numBulkheads; ii++)
             {
                 Matrix.Multiply(m_drawnBulkheads[ii], rotate, m_drawnBulkheads[ii]);
@@ -177,6 +208,8 @@ namespace HullRotate
             rotate[2, 2] = Math.Cos(angle);
             rotate[2, 0] = Math.Sin(angle);
             rotate[0, 2] = -Math.Sin(angle);
+
+            CenterTo(0, 0, 0);
 
             for (int ii = 0; ii < m_numBulkheads; ii++)
             {
@@ -194,9 +227,55 @@ namespace HullRotate
             rotate[0, 1] = Math.Sin(angle);
             rotate[1, 0] = -Math.Sin(angle);
 
+            CenterTo(0, 0, 0);
+
             for (int ii = 0; ii < m_numBulkheads; ii++)
             {
                 Matrix.Multiply(m_drawnBulkheads[ii], rotate, m_drawnBulkheads[ii]);
+            }
+        }
+
+        private void CenterTo(double centerX, double centerY, double centerZ)
+        {
+            // Get size
+            double min_x = double.MaxValue;
+            double min_y = double.MaxValue;
+            double min_z = double.MaxValue;
+            double max_x = double.MinValue;
+            double max_y = double.MinValue;
+            double max_z = double.MinValue;
+
+            for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
+            {
+                for (int chine = 0; chine < m_numChines; chine++)
+                {
+                    double x = m_drawnBulkheads[bulkhead][chine, 0];
+                    double y = m_drawnBulkheads[bulkhead][chine, 1];
+                    double z = m_drawnBulkheads[bulkhead][chine, 2];
+                    if (x > max_x) max_x = x;
+                    if (y > max_y) max_y = y;
+                    if (z > max_z) max_z = z;
+                    if (x < min_x) min_x = x;
+                    if (y < min_y) min_y = y;
+                    if (z < min_z) min_z = z;
+                }
+            }
+
+            double shift_x = centerX - (max_x + min_x) / 2;
+            double shift_y = centerY - (max_y + min_y) / 2;
+            double shift_z = centerZ - (max_z + min_z) / 2;
+
+            Console.WriteLine("CenterTo ({0},{1},{2}) Shift ({3},{4},{5})",
+                centerX, centerY, centerZ, shift_x, shift_y, shift_z);
+
+            for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
+            {
+                for (int chine = 0; chine < m_numChines; chine++)
+                {
+                    m_drawnBulkheads[bulkhead][chine, 0] += shift_x;
+                    m_drawnBulkheads[bulkhead][chine, 1] += shift_y;
+                    m_drawnBulkheads[bulkhead][chine, 2] += shift_z;
+                }
             }
         }
 

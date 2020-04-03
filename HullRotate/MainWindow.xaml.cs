@@ -42,7 +42,6 @@ namespace HullRotate
                     Console.WriteLine(result);
                 else
                 {
-                    myHull.PrepareDrawing();
                     myHull.Draw(myCanvas);
                 }
             }
@@ -55,19 +54,25 @@ namespace HullRotate
 
         private void XClick(object sender, RoutedEventArgs e)
         {
-            myHull.RotateDrawing_X(90 * Math.PI / 180.0);
+            myHull.RotateDrawing_X(5 * Math.PI / 180.0);
             myHull.Draw(myCanvas);
         }
 
         private void YClick(object sender, RoutedEventArgs e)
         {
-            myHull.RotateDrawing_Y(45 * Math.PI / 180.0);
+            myHull.RotateDrawing_Y(5 * Math.PI / 180.0);
             myHull.Draw(myCanvas);
         }
 
         private void ZClick(object sender, RoutedEventArgs e)
         {
-            myHull.RotateDrawing_Z(180 * Math.PI / 180.0);
+            myHull.RotateDrawing_Z(5 * Math.PI / 180.0);
+            myHull.Draw(myCanvas);
+        }
+
+        private void cubeClick(object sender, RoutedEventArgs e)
+        {
+            myHull.UnitCube();
             myHull.Draw(myCanvas);
         }
 
