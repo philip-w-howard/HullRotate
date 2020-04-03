@@ -19,10 +19,10 @@
             </ToolBar>
             <ToolBar Band="0" BandIndex="2">
 
-                <Button Click="UpClick">Up</Button>
-                <Button Click="DownClick">Down</Button>
-                <Button Click="LeftClick">Left</Button>
-                <Button Click="RightClick">Right</Button>
+                <Button Click="XClick">X</Button>
+                <Button Click="YClick">Y</Button>
+                <Button Click="ZClick">Z</Button>
+
             </ToolBar>
         </ToolBarTray>
         <Canvas Name="myCanvas"/>

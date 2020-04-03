@@ -41,7 +41,10 @@ namespace HullRotate
                 if (result != "")
                     Console.WriteLine(result);
                 else
-                    myHull.Draw(myCanvas, 0, 0, 0);
+                {
+                    myHull.PrepareDrawing();
+                    myHull.Draw(myCanvas);
+                }
             }
         }
 
@@ -50,24 +53,22 @@ namespace HullRotate
 
         }
 
-        private void UpClick(object sender, RoutedEventArgs e)
+        private void XClick(object sender, RoutedEventArgs e)
         {
-
+            myHull.RotateDrawing_X(90 * Math.PI / 180.0);
+            myHull.Draw(myCanvas);
         }
 
-        private void DownClick(object sender, RoutedEventArgs e)
+        private void YClick(object sender, RoutedEventArgs e)
         {
-
+            myHull.RotateDrawing_Y(45 * Math.PI / 180.0);
+            myHull.Draw(myCanvas);
         }
 
-        private void LeftClick(object sender, RoutedEventArgs e)
+        private void ZClick(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void RightClick(object sender, RoutedEventArgs e)
-        {
-
+            myHull.RotateDrawing_Z(180 * Math.PI / 180.0);
+            myHull.Draw(myCanvas);
         }
 
         private Hull myHull;
