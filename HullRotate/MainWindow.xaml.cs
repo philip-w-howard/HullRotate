@@ -42,7 +42,19 @@ namespace HullRotate
                     Console.WriteLine(result);
                 else
                 {
-                    myHull.Draw(myCanvas);
+                    myHull.RotateDrawing_Z(180);
+
+                    myHull.Draw(Front);
+
+                    myHull.RotateDrawing_Y(90);
+                    myHull.Draw(Side);
+
+                    myHull.RotateDrawing_X(90);
+                    myHull.Draw(Top);
+
+                    myHull.RotateDrawing_X(-30);
+                    myHull.RotateDrawing_Y(-30);
+                    myHull.Draw(Perspective);
                 }
             }
         }
@@ -54,28 +66,79 @@ namespace HullRotate
 
         private void XClick(object sender, RoutedEventArgs e)
         {
-            myHull.RotateDrawing_X(5 * Math.PI / 180.0);
-            myHull.Draw(myCanvas);
+            myHull.RotateDrawing_X(5);
+            myHull.Draw(Perspective);
         }
 
         private void YClick(object sender, RoutedEventArgs e)
         {
-            myHull.RotateDrawing_Y(5 * Math.PI / 180.0);
-            myHull.Draw(myCanvas);
+            myHull.RotateDrawing_Y(5);
+            myHull.Draw(Perspective);
         }
 
         private void ZClick(object sender, RoutedEventArgs e)
         {
-            myHull.RotateDrawing_Z(5 * Math.PI / 180.0);
-            myHull.Draw(myCanvas);
+            myHull.RotateDrawing_Z(5);
+            myHull.Draw(Perspective);
         }
 
         private void cubeClick(object sender, RoutedEventArgs e)
         {
             myHull.UnitCube();
-            myHull.Draw(myCanvas);
+            myHull.Draw(Perspective);
         }
 
         private Hull myHull;
+
+        private void FrontClick(object sender, MouseButtonEventArgs e)
+        {
+            myHull.PrepareDrawing();
+            myHull.RotateDrawing_Z(180);
+
+            myHull.Draw(Front);
+
+            myHull.RotateDrawing_Y(90);
+            myHull.Draw(Side);
+
+            myHull.RotateDrawing_X(90);
+            myHull.Draw(Top);
+
+
+            myHull.RotateDrawing_X(-90);
+            myHull.RotateDrawing_Y(-90);
+            myHull.Draw(Perspective);
+        }
+
+        private void TopClick(object sender, MouseButtonEventArgs e)
+        {
+            myHull.PrepareDrawing();
+            myHull.RotateDrawing_Z(180);
+
+            myHull.Draw(Front);
+
+            myHull.RotateDrawing_Y(90);
+            myHull.Draw(Side);
+
+            myHull.RotateDrawing_X(90);
+            myHull.Draw(Top);
+            myHull.Draw(Perspective);
+        }
+
+        private void SideClick(object sender, MouseButtonEventArgs e)
+        {
+            myHull.PrepareDrawing();
+            myHull.RotateDrawing_Z(180);
+
+            myHull.Draw(Front);
+
+            myHull.RotateDrawing_Y(90);
+            myHull.Draw(Side);
+
+            myHull.RotateDrawing_X(90);
+            myHull.Draw(Top);
+
+            myHull.RotateDrawing_X(-90);
+            myHull.Draw(Perspective);
+        }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HullRotate"
         mc:Ignorable="d"
-        Title="Hull Rotator" Height="450" Width="800">
+        Title="Hull Rotator" Height="650" Width="800">
     <DockPanel>
         <ToolBarTray Background="White" DockPanel.Dock="Top">
             <ToolBar Band="0
@@ -19,15 +19,19 @@
                 </Menu>
             </ToolBar>
             <ToolBar Band="0" BandIndex="2">
-
                 <Button Click="XClick">X</Button>
                 <Button Click="YClick">Y</Button>
                 <Button Click="ZClick">Z</Button>
-
             </ToolBar>
         </ToolBarTray>
-        <Canvas Name="myCanvas"/>
-
+        <DockPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                <Canvas Name="Front" Width="150" Height="150" Background="White" PreviewMouseDown="FrontClick"/>
+                <Canvas Name="Side" Width="250" Height="150" Background="White" PreviewMouseDown="SideClick"/>
+                <Canvas Name="Top" Width="250" Height="150" Background="White" PreviewMouseDown="TopClick"/>
+            </StackPanel>
+        <Canvas Name="Perspective"/>
+        </DockPanel>
 
     </DockPanel>
 </Window>

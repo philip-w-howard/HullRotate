@@ -200,6 +200,8 @@ namespace HullRotate
         {
             double[,] rotate = new double[3, 3];
 
+            angle = angle * Math.PI / 180.0;
+
             rotate[0, 0] = 1.0;
             rotate[1, 1] = Math.Cos(angle);
             rotate[2, 2] = Math.Cos(angle);
@@ -218,6 +220,8 @@ namespace HullRotate
         {
             double[,] rotate = new double[3, 3];
 
+            angle = angle * Math.PI / 180.0;
+
             rotate[1, 1] = 1.0;
             rotate[0, 0] = Math.Cos(angle);
             rotate[2, 2] = Math.Cos(angle);
@@ -235,6 +239,8 @@ namespace HullRotate
         public void RotateDrawing_Z(double angle)
         {
             double[,] rotate = new double[3, 3];
+
+            angle = angle * Math.PI / 180.0;
 
             rotate[2, 2] = 1.0;
             rotate[0, 0] = Math.Cos(angle);
