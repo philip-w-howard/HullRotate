@@ -123,9 +123,6 @@ namespace HullRotate
                     m_drawnBulkheads[bulkhead][chine, 0] *= scale;
                     m_drawnBulkheads[bulkhead][chine, 1] *= scale;
                     m_drawnBulkheads[bulkhead][chine, 2] *= scale;
-
-                    // Flip in Y direction
-                    //                    bulkheads[bulkhead][chine, 1] = canvas.ActualHeight - bulkheads[bulkhead][chine, 1];
                 }
             }
 
@@ -174,7 +171,7 @@ namespace HullRotate
             }
 
         }
-        public void PrepareDrawing()
+        protected void PrepareDrawing()
         {
             m_drawnBulkheads = new double[m_bulkheads.GetLength(0)][,];
 
@@ -196,7 +193,7 @@ namespace HullRotate
             }
         }
 
-        public void RotateDrawing_X(double angle)
+        protected void RotateDrawing_X(double angle)
         {
             double[,] rotate = new double[3, 3];
 
@@ -216,7 +213,7 @@ namespace HullRotate
             }
         }
 
-        public void RotateDrawing_Y(double angle)
+        protected void RotateDrawing_Y(double angle)
         {
             double[,] rotate = new double[3, 3];
 
@@ -236,7 +233,7 @@ namespace HullRotate
             }
         }
 
-        public void RotateDrawing_Z(double angle)
+        protected void RotateDrawing_Z(double angle)
         {
             double[,] rotate = new double[3, 3];
 
