@@ -256,6 +256,15 @@ namespace HullRotate
             }
         }
 
+        public void RotateTo(double x, double y, double z)
+        {
+            // NOTE: Could optimize by multiplying the three rotation matrices before rotating the points
+            PrepareDrawing();
+            RotateDrawing_Z(z);
+            RotateDrawing_Y(y);
+            RotateDrawing_X(x);
+        }
+
         private void CenterTo(double centerX, double centerY, double centerZ)
         {
             // Get size
