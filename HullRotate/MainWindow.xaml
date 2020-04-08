@@ -26,9 +26,15 @@
         </ToolBarTray>
         <DockPanel>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                <Canvas Name="Front" Width="150" Height="150" Background="White" PreviewMouseDown="FrontClick"/>
-                <Canvas Name="Side" Width="250" Height="150" Background="White" PreviewMouseDown="SideClick"/>
-                <Canvas Name="Top" Width="250" Height="150" Background="White" PreviewMouseDown="TopClick"/>
+                <Border BorderThickness="1" BorderBrush="Gray">
+                    <Canvas Name="Front" Width="150" Height="150" Background="White" PreviewMouseDown="FrontClick"/>
+                </Border>
+                <Border BorderThickness="1" BorderBrush="Gray">
+                    <Canvas Name="Side" Width="250" Height="150" Background="White" PreviewMouseDown="SideClick"/>
+                </Border>
+                <Border BorderThickness="1" BorderBrush="Gray">
+                    <Canvas Name="Top" Width="250" Height="150" Background="White" PreviewMouseDown="TopClick"/>
+                </Border>
             </StackPanel>
         <Canvas Name="Perspective"/>
         </DockPanel>
