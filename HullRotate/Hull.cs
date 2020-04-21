@@ -126,7 +126,7 @@ namespace HullRotate
                 }
             }
 
-            for (int chine = 0; chine < m_numChines; chine++)
+            for (int chine = 0; chine < m_numChines*2; chine++)
             {
                 for (int point = 0; point < POINTS_PER_CHINE; point++)
                 {
@@ -180,9 +180,9 @@ namespace HullRotate
             //    }
             //}
 
-            for (int chine = 0; chine < m_numChines; chine++)
+            for (int chine = 0; chine < m_numChines*2; chine++)
             {
-                for (int point = 0; point < POINTS_PER_CHINE - 1; point++)
+                for (int point = 0; point < POINTS_PER_CHINE - 2; point++)
                 {
                     Line myLine = new Line();
 
@@ -200,16 +200,14 @@ namespace HullRotate
             }
 
         }
-        // public Splines(int numPoints, int endCondition, double[,] points);
-        // public void GetPoints(double[,] points);
         protected void PrepareDrawing()
         {
 
             m_drawnBulkheads = new double[m_bulkheads.GetLength(0)][,];
+            int centerChine = m_bulkheads[0].GetLength(0);
 
             for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
             {
-                int centerChine = m_bulkheads[bulkhead].GetLength(0);
                 m_drawnBulkheads[bulkhead] = new double[m_bulkheads[bulkhead].GetLength(0)*2,3];
                 for (int chine=0; chine< m_bulkheads[bulkhead].GetLength(0); chine++)
                 {
@@ -226,15 +224,20 @@ namespace HullRotate
 
             m_chines = new double[m_numChines * 2][,];
             double[,] chine_data = new double[m_numBulkheads, 3];
-            for (int chine = 0; chine<m_numChines; chine++)
+            for (int chine = 0; chine<m_numChines * 2; chine++)
             {
+                int actual_chine = chine;
+                if (chine >= m_numChines) actual_chine = chine - m_numChines;
+
                 m_chines[chine] = new double[POINTS_PER_CHINE, 3];
                 for (int bulkhead=0; bulkhead<m_numBulkheads; bulkhead++)
                 {
                     for (int axis=0; axis<3; axis++)
                     {
-                        chine_data[bulkhead, axis] = m_bulkheads[bulkhead][chine, axis];
+                        chine_data[bulkhead, axis] = m_bulkheads[bulkhead][actual_chine, axis];
                     }
+
+                    if (chine >= m_numChines) chine_data[bulkhead, 0] *= -1;
                 }
                 Splines spline = new Splines(m_numBulkheads, Splines.RELAXED, chine_data);
                 spline.GetPoints(m_chines[chine]);
@@ -260,7 +263,7 @@ namespace HullRotate
                 Matrix.Multiply(m_drawnBulkheads[ii], rotate, m_drawnBulkheads[ii]);
             }
 
-            for (int ii = 0; ii < m_numChines; ii++)
+            for (int ii = 0; ii < m_numChines * 2; ii++)
             {
                 Matrix.Multiply(m_chines[ii], rotate, m_chines[ii]);
             }
@@ -285,7 +288,7 @@ namespace HullRotate
                 Matrix.Multiply(m_drawnBulkheads[ii], rotate, m_drawnBulkheads[ii]);
             }
 
-            for (int ii = 0; ii < m_numChines; ii++)
+            for (int ii = 0; ii < m_numChines * 2; ii++)
             {
                 Matrix.Multiply(m_chines[ii], rotate, m_chines[ii]);
             }
@@ -310,7 +313,7 @@ namespace HullRotate
                 Matrix.Multiply(m_drawnBulkheads[ii], rotate, m_drawnBulkheads[ii]);
             }
 
-            for (int ii=0; ii<m_numChines; ii++)
+            for (int ii=0; ii<m_numChines * 2; ii++)
             {
                 Matrix.Multiply(m_chines[ii], rotate, m_chines[ii]);
             }
@@ -368,7 +371,7 @@ namespace HullRotate
                 }
             }
 
-            for (int ii = 0; ii < m_numChines; ii++)
+            for (int ii = 0; ii < m_numChines * 2; ii++)
             {
                 for (int point=0; point<POINTS_PER_CHINE; point++)
                 {
