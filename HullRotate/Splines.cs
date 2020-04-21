@@ -12,13 +12,11 @@ namespace HullRotate
         public const int CLAMPED = 2;
 
         public Splines(int numPoints, int endCondition,
-                    double[,] points,
-                    int pointsPerSegment)
+                    double[,] points)
         {
             m_numPoints = numPoints;
             m_endCondition = endCondition;
             m_points = points;
-            m_pointsPerSegment = pointsPerSegment;
 
             m_m_matrix = new double[numPoints, numPoints];
             m_b_matrix = new double[numPoints, 3];
@@ -214,7 +212,7 @@ namespace HullRotate
 
         private int m_numPoints;                // N
         private int m_endCondition;             // C1
-        private int m_pointsPerSegment;         // Z
+        //private int m_pointsPerSegment;         // Z
         private double[,] m_points;             // P [n, axis]
         private double[,] m_m_matrix;           // N [rows, cols]
         private double[,] m_b_matrix;           // B [rows, axis]

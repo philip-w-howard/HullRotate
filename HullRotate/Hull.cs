@@ -126,6 +126,16 @@ namespace HullRotate
                 }
             }
 
+            for (int chine = 0; chine < m_numChines; chine++)
+            {
+                for (int point = 0; point < POINTS_PER_CHINE; point++)
+                {
+                    m_chines[chine][point, 0] *= scale;
+                    m_chines[chine][point, 1] *= scale;
+                    m_chines[chine][point, 2] *= scale;
+                }
+            }
+
             CenterTo(canvas.ActualWidth/2, canvas.ActualHeight/2, 0);
 
             for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
@@ -151,18 +161,37 @@ namespace HullRotate
             }
 
             // NOTE: Won't work if the array is ragged
-            for (int chine = 0; chine < m_drawnBulkheads[0].GetLength(0); chine++)
+            //for (int chine = 0; chine < m_drawnBulkheads[0].GetLength(0); chine++)
+            //{
+            //    for (int bulkhead = 0; bulkhead < m_numBulkheads - 1; bulkhead++)
+            //    {
+            //        Line myLine = new Line();
+
+            //        myLine.Stroke = System.Windows.Media.Brushes.Gray;
+
+            //        myLine.X1 = m_drawnBulkheads[bulkhead][chine, 0];
+            //        myLine.X2 = m_drawnBulkheads[bulkhead + 1][chine, 0];
+            //        myLine.Y1 = m_drawnBulkheads[bulkhead][chine, 1];
+            //        myLine.Y2 = m_drawnBulkheads[bulkhead + 1][chine, 1];
+
+            //        myLine.StrokeThickness = 1;
+
+            //        canvas.Children.Add(myLine);
+            //    }
+            //}
+
+            for (int chine = 0; chine < m_numChines; chine++)
             {
-                for (int bulkhead = 0; bulkhead < m_numBulkheads - 1; bulkhead++)
+                for (int point = 0; point < POINTS_PER_CHINE - 1; point++)
                 {
                     Line myLine = new Line();
 
                     myLine.Stroke = System.Windows.Media.Brushes.Gray;
 
-                    myLine.X1 = m_drawnBulkheads[bulkhead][chine, 0];
-                    myLine.X2 = m_drawnBulkheads[bulkhead + 1][chine, 0];
-                    myLine.Y1 = m_drawnBulkheads[bulkhead][chine, 1];
-                    myLine.Y2 = m_drawnBulkheads[bulkhead + 1][chine, 1];
+                    myLine.X1 = m_chines[chine][point, 0];
+                    myLine.X2 = m_chines[chine][point+1, 0];
+                    myLine.Y1 = m_chines[chine][point, 1];
+                    myLine.Y2 = m_chines[chine][point+1, 1];
 
                     myLine.StrokeThickness = 1;
 
@@ -171,8 +200,11 @@ namespace HullRotate
             }
 
         }
+        // public Splines(int numPoints, int endCondition, double[,] points);
+        // public void GetPoints(double[,] points);
         protected void PrepareDrawing()
         {
+
             m_drawnBulkheads = new double[m_bulkheads.GetLength(0)][,];
 
             for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
@@ -190,6 +222,22 @@ namespace HullRotate
                     // mirror the X
                     m_drawnBulkheads[bulkhead][chine + centerChine, 0] *= -1;
                 }
+            }
+
+            m_chines = new double[m_numChines * 2][,];
+            double[,] chine_data = new double[m_numBulkheads, 3];
+            for (int chine = 0; chine<m_numChines; chine++)
+            {
+                m_chines[chine] = new double[POINTS_PER_CHINE, 3];
+                for (int bulkhead=0; bulkhead<m_numBulkheads; bulkhead++)
+                {
+                    for (int axis=0; axis<3; axis++)
+                    {
+                        chine_data[bulkhead, axis] = m_bulkheads[bulkhead][chine, axis];
+                    }
+                }
+                Splines spline = new Splines(m_numBulkheads, Splines.RELAXED, chine_data);
+                spline.GetPoints(m_chines[chine]);
             }
         }
 
@@ -211,6 +259,11 @@ namespace HullRotate
             {
                 Matrix.Multiply(m_drawnBulkheads[ii], rotate, m_drawnBulkheads[ii]);
             }
+
+            for (int ii = 0; ii < m_numChines; ii++)
+            {
+                Matrix.Multiply(m_chines[ii], rotate, m_chines[ii]);
+            }
         }
 
         protected void RotateDrawing_Y(double angle)
@@ -230,6 +283,11 @@ namespace HullRotate
             for (int ii = 0; ii < m_numBulkheads; ii++)
             {
                 Matrix.Multiply(m_drawnBulkheads[ii], rotate, m_drawnBulkheads[ii]);
+            }
+
+            for (int ii = 0; ii < m_numChines; ii++)
+            {
+                Matrix.Multiply(m_chines[ii], rotate, m_chines[ii]);
             }
         }
 
@@ -251,6 +309,11 @@ namespace HullRotate
             {
                 Matrix.Multiply(m_drawnBulkheads[ii], rotate, m_drawnBulkheads[ii]);
             }
+
+            for (int ii=0; ii<m_numChines; ii++)
+            {
+                Matrix.Multiply(m_chines[ii], rotate, m_chines[ii]);
+            }
         }
 
         public void RotateTo(double x, double y, double z)
@@ -258,8 +321,8 @@ namespace HullRotate
             // NOTE: Could optimize by multiplying the three rotation matrices before rotating the points
             PrepareDrawing();
             RotateDrawing_Z(z);
-            RotateDrawing_Y(y);
             RotateDrawing_X(x);
+            RotateDrawing_Y(y);
         }
 
         private void CenterTo(double centerX, double centerY, double centerZ)
@@ -304,11 +367,23 @@ namespace HullRotate
                     m_drawnBulkheads[bulkhead][chine, 2] += shift_z;
                 }
             }
+
+            for (int ii = 0; ii < m_numChines; ii++)
+            {
+                for (int point=0; point<POINTS_PER_CHINE; point++)
+                {
+                    m_chines[ii][point, 0] += shift_x;
+                    m_chines[ii][point, 1] += shift_y;
+                    m_chines[ii][point, 2] += shift_z;
+                }
+            }
         }
 
         private int m_numChines;
         private int m_numBulkheads;
+        private double[][,] m_chines;           // [chine][index, axis]
         private double[][,] m_bulkheads;        // [bulkhead][chine, axis]
         private double[][,] m_drawnBulkheads;   // [bulkhead][chine, axis]
+        private const int POINTS_PER_CHINE = 50;
     }
 }

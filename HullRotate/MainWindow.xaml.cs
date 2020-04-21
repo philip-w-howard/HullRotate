@@ -94,9 +94,9 @@ namespace HullRotate
 
         private void TopClick(object sender, MouseButtonEventArgs e)
         {
-            m_xAngle = 90;
+            m_xAngle = 0;
             m_yAngle = 90;
-            m_zAngle = 180;
+            m_zAngle = 90;
             UpdateDrawings();
         }
 
@@ -116,7 +116,7 @@ namespace HullRotate
             myHull.RotateTo(0, 90, 180);
             myHull.Draw(Side);
 
-            myHull.RotateTo(90, 90, 180);
+            myHull.RotateTo(0, 90, 90);
             myHull.Draw(Top);
 
             myHull.RotateTo(m_xAngle, m_yAngle, m_zAngle);

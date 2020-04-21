@@ -1,0 +1,8 @@
+﻿Display splines
+Compute planes for bulkheads
+Edit points
+   x,y: Pick bulkhead and highlight
+   Move point on screen plane
+   Adjust to be in bulkhead plane
+
+   Bulkhead zero: move in side view.
