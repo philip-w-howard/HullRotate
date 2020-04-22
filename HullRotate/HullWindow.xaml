@@ -12,12 +12,12 @@
                      " BandIndex="1">
                 <Menu >
                     <MenuItem Header="_Edit">
-                        <MenuItem Header="Bulkhead"/>
+                        <MenuItem Header="Bulkhead" Click="MenuItem_Click"/>
                     </MenuItem>
                 </Menu>
             </ToolBar>
             <ToolBar Band="0" BandIndex="2">
-                <ComboBox>
+                <ComboBox Name="currBulkhead" SelectionChanged="ComboBox_SelectionChanged">
                     <ComboBoxItem>1</ComboBoxItem>
                     <ComboBoxItem>2</ComboBoxItem>
                     <ComboBoxItem>3</ComboBoxItem>

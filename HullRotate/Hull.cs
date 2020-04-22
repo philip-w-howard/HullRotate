@@ -20,13 +20,13 @@ namespace HullRotate
             m_numBulkheads = 2;
             m_numChines = 4;
 
-            m_bulkheads = new double[m_numBulkheads][,];
-            for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
+            m_bulkheads = new double[numBulkheads][,];
+            for (int bulkhead = 0; bulkhead < numBulkheads; bulkhead++)
             {
-                m_bulkheads[bulkhead] = new double[m_numChines, 3];
+                m_bulkheads[bulkhead] = new double[numChines, 3];
             }
 
-            for (int bulkhead=0; bulkhead<m_numBulkheads; bulkhead++)
+            for (int bulkhead=0; bulkhead<numBulkheads; bulkhead++)
             {
                 m_bulkheads[bulkhead][0, 0] = 0;
                 m_bulkheads[bulkhead][0, 1] = 0;
@@ -56,18 +56,18 @@ namespace HullRotate
             if (lines.Length < 1) return "Invalid file format";
             if (! int.TryParse(lines[0], out m_numChines)) return "Invalid file format 1";
             m_numBulkheads = 5;
-            m_bulkheads = new double[m_numBulkheads][,];
-            for (int bulkhead=0; bulkhead<m_numBulkheads; bulkhead++)
+            m_bulkheads = new double[numBulkheads][,];
+            for (int bulkhead=0; bulkhead<numBulkheads; bulkhead++)
             {
-                m_bulkheads[bulkhead] = new double[m_numChines, 3];
+                m_bulkheads[bulkhead] = new double[numChines, 3];
             }
 
-            if (lines.Length < m_numBulkheads * m_numChines * 3 + 1) return "Invalid file format 2";
+            if (lines.Length < numBulkheads * numChines * 3 + 1) return "Invalid file format 2";
 
             int index = 1;
-            for (int bulkhead=0; bulkhead<m_numBulkheads; bulkhead++)
+            for (int bulkhead=0; bulkhead<numBulkheads; bulkhead++)
             {
-                for (int chine=0; chine<m_numChines; chine++)
+                for (int chine=0; chine<numChines; chine++)
                 {
                     for (int axis=0; axis<3; axis++)
                     {
@@ -93,7 +93,7 @@ namespace HullRotate
             double max_x = double.MinValue;
             double max_y = double.MinValue;
 
-            for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
+            for (int bulkhead = 0; bulkhead < numBulkheads; bulkhead++)
             {
                 for (int chine = 0; chine < m_drawnBulkheads[bulkhead].GetLength(0); chine++)
                 {
@@ -116,7 +116,7 @@ namespace HullRotate
 
             Console.WriteLine("Scale: {0}", scale);
 
-            for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
+            for (int bulkhead = 0; bulkhead < numBulkheads; bulkhead++)
             {
                 for (int chine = 0; chine < m_drawnBulkheads[bulkhead].GetLength(0); chine++)
                 {
@@ -126,7 +126,7 @@ namespace HullRotate
                 }
             }
 
-            for (int chine = 0; chine < m_numChines*2; chine++)
+            for (int chine = 0; chine < numChines*2; chine++)
             {
                 for (int point = 0; point < POINTS_PER_CHINE; point++)
                 {
@@ -138,7 +138,7 @@ namespace HullRotate
 
             CenterTo(canvas.ActualWidth/2, canvas.ActualHeight/2, 0);
 
-            for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
+            for (int bulkhead = 0; bulkhead < numBulkheads; bulkhead++)
             {
                 for (int chine = 0; chine < m_drawnBulkheads[bulkhead].GetLength(0) - 1; chine++)
                 {
@@ -180,7 +180,7 @@ namespace HullRotate
             //    }
             //}
 
-            for (int chine = 0; chine < m_numChines*2; chine++)
+            for (int chine = 0; chine < numChines*2; chine++)
             {
                 for (int point = 0; point < POINTS_PER_CHINE - 2; point++)
                 {
@@ -206,7 +206,7 @@ namespace HullRotate
             m_drawnBulkheads = new double[m_bulkheads.GetLength(0)][,];
             int centerChine = m_bulkheads[0].GetLength(0);
 
-            for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
+            for (int bulkhead = 0; bulkhead < numBulkheads; bulkhead++)
             {
                 m_drawnBulkheads[bulkhead] = new double[m_bulkheads[bulkhead].GetLength(0)*2,3];
                 for (int chine=0; chine< m_bulkheads[bulkhead].GetLength(0); chine++)
@@ -222,24 +222,24 @@ namespace HullRotate
                 }
             }
 
-            m_chines = new double[m_numChines * 2][,];
-            double[,] chine_data = new double[m_numBulkheads, 3];
-            for (int chine = 0; chine<m_numChines * 2; chine++)
+            m_chines = new double[numChines * 2][,];
+            double[,] chine_data = new double[numBulkheads, 3];
+            for (int chine = 0; chine<numChines * 2; chine++)
             {
                 int actual_chine = chine;
-                if (chine >= m_numChines) actual_chine = chine - m_numChines;
+                if (chine >= numChines) actual_chine = chine - numChines;
 
                 m_chines[chine] = new double[POINTS_PER_CHINE, 3];
-                for (int bulkhead=0; bulkhead<m_numBulkheads; bulkhead++)
+                for (int bulkhead=0; bulkhead<numBulkheads; bulkhead++)
                 {
                     for (int axis=0; axis<3; axis++)
                     {
                         chine_data[bulkhead, axis] = m_bulkheads[bulkhead][actual_chine, axis];
                     }
 
-                    if (chine >= m_numChines) chine_data[bulkhead, 0] *= -1;
+                    if (chine >= numChines) chine_data[bulkhead, 0] *= -1;
                 }
-                Splines spline = new Splines(m_numBulkheads, Splines.RELAXED, chine_data);
+                Splines spline = new Splines(numBulkheads, Splines.RELAXED, chine_data);
                 spline.GetPoints(m_chines[chine]);
             }
         }
@@ -258,12 +258,12 @@ namespace HullRotate
 
             CenterTo(0,0,0);
 
-            for (int ii = 0; ii < m_numBulkheads; ii++)
+            for (int ii = 0; ii < numBulkheads; ii++)
             {
                 Matrix.Multiply(m_drawnBulkheads[ii], rotate, m_drawnBulkheads[ii]);
             }
 
-            for (int ii = 0; ii < m_numChines * 2; ii++)
+            for (int ii = 0; ii < numChines * 2; ii++)
             {
                 Matrix.Multiply(m_chines[ii], rotate, m_chines[ii]);
             }
@@ -283,12 +283,12 @@ namespace HullRotate
 
             CenterTo(0, 0, 0);
 
-            for (int ii = 0; ii < m_numBulkheads; ii++)
+            for (int ii = 0; ii < numBulkheads; ii++)
             {
                 Matrix.Multiply(m_drawnBulkheads[ii], rotate, m_drawnBulkheads[ii]);
             }
 
-            for (int ii = 0; ii < m_numChines * 2; ii++)
+            for (int ii = 0; ii < numChines * 2; ii++)
             {
                 Matrix.Multiply(m_chines[ii], rotate, m_chines[ii]);
             }
@@ -308,12 +308,12 @@ namespace HullRotate
 
             CenterTo(0, 0, 0);
 
-            for (int ii = 0; ii < m_numBulkheads; ii++)
+            for (int ii = 0; ii < numBulkheads; ii++)
             {
                 Matrix.Multiply(m_drawnBulkheads[ii], rotate, m_drawnBulkheads[ii]);
             }
 
-            for (int ii=0; ii<m_numChines * 2; ii++)
+            for (int ii=0; ii<numChines * 2; ii++)
             {
                 Matrix.Multiply(m_chines[ii], rotate, m_chines[ii]);
             }
@@ -338,7 +338,7 @@ namespace HullRotate
             double max_y = double.MinValue;
             double max_z = double.MinValue;
 
-            for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
+            for (int bulkhead = 0; bulkhead < numBulkheads; bulkhead++)
             {
                 for (int chine = 0; chine < m_drawnBulkheads[bulkhead].GetLength(0); chine++)
                 {
@@ -361,7 +361,7 @@ namespace HullRotate
             Console.WriteLine("CenterTo ({0},{1},{2}) Shift ({3},{4},{5})",
                 centerX, centerY, centerZ, shift_x, shift_y, shift_z);
 
-            for (int bulkhead = 0; bulkhead < m_numBulkheads; bulkhead++)
+            for (int bulkhead = 0; bulkhead < numBulkheads; bulkhead++)
             {
                 for (int chine = 0; chine < m_drawnBulkheads[bulkhead].GetLength(0); chine++)
                 {
@@ -371,7 +371,7 @@ namespace HullRotate
                 }
             }
 
-            for (int ii = 0; ii < m_numChines * 2; ii++)
+            for (int ii = 0; ii < numChines * 2; ii++)
             {
                 for (int point=0; point<POINTS_PER_CHINE; point++)
                 {
@@ -381,6 +381,17 @@ namespace HullRotate
                 }
             }
         }
+
+        public void GetBulkheadPoints(int bulkhead, double[,] points)
+        {
+            for (int ii=0; ii<numChines; ii++)
+            {
+                points[ii, 0] = m_drawnBulkheads[bulkhead][ii, 0];
+                points[ii, 1] = m_drawnBulkheads[bulkhead][ii, 1];
+            }
+        }
+        public int numChines { get => m_numChines; }
+        public int numBulkheads { get => m_numBulkheads; }
 
         private int m_numChines;
         private int m_numBulkheads;
