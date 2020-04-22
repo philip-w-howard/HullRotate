@@ -1,4 +1,4 @@
-﻿Display splines
+﻿xxx Display splines
 Compute planes for bulkheads
 Edit points
    x,y: Pick bulkhead and highlight
@@ -6,3 +6,6 @@ Edit points
    Adjust to be in bulkhead plane
 
    Bulkhead zero: move in side view.
+Add/position bulkheads
+Splines.GetAt(coord)
+

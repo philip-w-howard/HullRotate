@@ -11,7 +11,7 @@ using System.Windows.Shapes;
 
 namespace HullRotate
 {
-    class Hull
+    public class Hull
     {
         public Hull() { }
 
