@@ -29,6 +29,7 @@
             </ToolBar>
         </ToolBarTray>
 
-        <Canvas Name="HullCanvas" />
+        <Canvas Name="HullCanvas" Background="White" PreviewMouseDown="HullCanvas_PreviewMouseDown"
+                PreviewMouseUp="HullCanvas_PreviewMouseDown" PreviewMouseMove="HullCanvas_PreviewMouseMove"/>
     </DockPanel>
 </Window>
