@@ -9,3 +9,4 @@ Edit points
 Add/position bulkheads
 Splines.GetAt(coord)
 
+Spline bulkhead 0 (and N?)

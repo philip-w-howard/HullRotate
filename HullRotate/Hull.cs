@@ -13,12 +13,24 @@ namespace HullRotate
 {
     public class Hull
     {
+        public int numChines { get; private set; }
+        public int numBulkheads { get ; private set; }
+
+        private double[][,] m_chines;           // [chine][index, axis]
+        private double[][,] m_bulkheads;        // [bulkhead][chine, axis]
+        private double[][,] m_drawnBulkheads;   // [bulkhead][chine, axis]
+        private const int POINTS_PER_CHINE = 50;
+
+        private double m_rotate_x, m_rotate_y, m_rotate_z;
+        private double m_translate_x, m_translate_y, m_translate_z;
+        private double m_scale;
+
         public Hull() { }
 
         public string UnitCube()
         {
-            m_numBulkheads = 2;
-            m_numChines = 4;
+            numBulkheads = 2;
+            numChines = 4;
 
             m_bulkheads = new double[numBulkheads][,];
             for (int bulkhead = 0; bulkhead < numBulkheads; bulkhead++)
@@ -54,8 +66,11 @@ namespace HullRotate
         {
             string[] lines = System.IO.File.ReadAllLines(filename);
             if (lines.Length < 1) return "Invalid file format";
-            if (! int.TryParse(lines[0], out m_numChines)) return "Invalid file format 1";
-            m_numBulkheads = 5;
+            int num_chines = numChines;
+
+            if (! int.TryParse(lines[0], out num_chines)) return "Invalid file format 1";
+            numChines = num_chines;
+            numBulkheads = 5;
             m_bulkheads = new double[numBulkheads][,];
             for (int bulkhead=0; bulkhead<numBulkheads; bulkhead++)
             {
@@ -110,19 +125,19 @@ namespace HullRotate
             double scale1 = canvas.ActualWidth / (max_x - min_x);
             double scale2 = canvas.ActualHeight / (max_y - min_y);
 
-            double scale = scale1;
-            if (scale2 < scale) scale = scale2;
-            scale = 0.8 * scale;
+            m_scale = scale1;
+            if (scale2 < m_scale) m_scale = scale2;
+            m_scale = 0.8 * m_scale;
 
-            Console.WriteLine("Scale: {0}", scale);
+            Console.WriteLine("Scale: {0}", m_scale);
 
             for (int bulkhead = 0; bulkhead < numBulkheads; bulkhead++)
             {
                 for (int chine = 0; chine < m_drawnBulkheads[bulkhead].GetLength(0); chine++)
                 {
-                    m_drawnBulkheads[bulkhead][chine, 0] *= scale;
-                    m_drawnBulkheads[bulkhead][chine, 1] *= scale;
-                    m_drawnBulkheads[bulkhead][chine, 2] *= scale;
+                    m_drawnBulkheads[bulkhead][chine, 0] *= m_scale;
+                    m_drawnBulkheads[bulkhead][chine, 1] *= m_scale;
+                    m_drawnBulkheads[bulkhead][chine, 2] *= m_scale;
                 }
             }
 
@@ -130,9 +145,9 @@ namespace HullRotate
             {
                 for (int point = 0; point < POINTS_PER_CHINE; point++)
                 {
-                    m_chines[chine][point, 0] *= scale;
-                    m_chines[chine][point, 1] *= scale;
-                    m_chines[chine][point, 2] *= scale;
+                    m_chines[chine][point, 0] *= m_scale;
+                    m_chines[chine][point, 1] *= m_scale;
+                    m_chines[chine][point, 2] *= m_scale;
                 }
             }
 
@@ -163,7 +178,7 @@ namespace HullRotate
             // NOTE: Won't work if the array is ragged
             //for (int chine = 0; chine < m_drawnBulkheads[0].GetLength(0); chine++)
             //{
-            //    for (int bulkhead = 0; bulkhead < m_numBulkheads - 1; bulkhead++)
+            //    for (int bulkhead = 0; bulkhead < numBulkheads - 1; bulkhead++)
             //    {
             //        Line myLine = new Line();
 
@@ -198,7 +213,6 @@ namespace HullRotate
                     canvas.Children.Add(myLine);
                 }
             }
-
         }
         protected void PrepareDrawing()
         {
@@ -248,6 +262,8 @@ namespace HullRotate
         {
             double[,] rotate = new double[3, 3];
 
+            m_rotate_x = angle;
+
             angle = angle * Math.PI / 180.0;
 
             rotate[0, 0] = 1.0;
@@ -273,6 +289,8 @@ namespace HullRotate
         {
             double[,] rotate = new double[3, 3];
 
+            m_rotate_y = angle;
+
             angle = angle * Math.PI / 180.0;
 
             rotate[1, 1] = 1.0;
@@ -297,6 +315,8 @@ namespace HullRotate
         protected void RotateDrawing_Z(double angle)
         {
             double[,] rotate = new double[3, 3];
+
+            m_rotate_z = angle;
 
             angle = angle * Math.PI / 180.0;
 
@@ -354,20 +374,24 @@ namespace HullRotate
                 }
             }
 
-            double shift_x = centerX - (max_x + min_x) / 2;
-            double shift_y = centerY - (max_y + min_y) / 2;
-            double shift_z = centerZ - (max_z + min_z) / 2;
+            m_translate_x = centerX - (max_x + min_x) / 2;
+            m_translate_y = centerY - (max_y + min_y) / 2;
+            m_translate_z = centerZ - (max_z + min_z) / 2;
 
             Console.WriteLine("CenterTo ({0},{1},{2}) Shift ({3},{4},{5})",
-                centerX, centerY, centerZ, shift_x, shift_y, shift_z);
+                centerX, centerY, centerZ, m_translate_x, m_translate_y, m_translate_z);
+            TranslateTo(m_translate_x, m_translate_y, m_translate_z);
+        }
 
+        private void TranslateTo(double shiftX, double shiftY, double shiftZ)
+        {
             for (int bulkhead = 0; bulkhead < numBulkheads; bulkhead++)
             {
                 for (int chine = 0; chine < m_drawnBulkheads[bulkhead].GetLength(0); chine++)
                 {
-                    m_drawnBulkheads[bulkhead][chine, 0] += shift_x;
-                    m_drawnBulkheads[bulkhead][chine, 1] += shift_y;
-                    m_drawnBulkheads[bulkhead][chine, 2] += shift_z;
+                    m_drawnBulkheads[bulkhead][chine, 0] += shiftX;
+                    m_drawnBulkheads[bulkhead][chine, 1] += shiftY;
+                    m_drawnBulkheads[bulkhead][chine, 2] += shiftZ;
                 }
             }
 
@@ -375,9 +399,9 @@ namespace HullRotate
             {
                 for (int point=0; point<POINTS_PER_CHINE; point++)
                 {
-                    m_chines[ii][point, 0] += shift_x;
-                    m_chines[ii][point, 1] += shift_y;
-                    m_chines[ii][point, 2] += shift_z;
+                    m_chines[ii][point, 0] += shiftX;
+                    m_chines[ii][point, 1] += shiftY;
+                    m_chines[ii][point, 2] += shiftZ;
                 }
             }
         }
@@ -390,14 +414,13 @@ namespace HullRotate
                 points[ii, 1] = m_drawnBulkheads[bulkhead][ii, 1];
             }
         }
-        public int numChines { get => m_numChines; }
-        public int numBulkheads { get => m_numBulkheads; }
 
-        private int m_numChines;
-        private int m_numBulkheads;
-        private double[][,] m_chines;           // [chine][index, axis]
-        private double[][,] m_bulkheads;        // [bulkhead][chine, axis]
-        private double[][,] m_drawnBulkheads;   // [bulkhead][chine, axis]
-        private const int POINTS_PER_CHINE = 50;
+        public void SetBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
+        {
+            m_bulkheads[bulkhead][chine, 0] = x;
+            m_bulkheads[bulkhead][chine, 1] = y;
+            //m_bulkheads[bulkhead][chine, 2] = z;
+            PrepareDrawing();
+        }
     }
 }

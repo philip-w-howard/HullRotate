@@ -30,6 +30,12 @@ namespace HullRotate
             Title = name;
 
             m_parent = parent;
+
+            for (int ii = 1; ii < hull.numBulkheads + 1; ii++)
+            {
+                currBulkhead.Items.Add(ii);
+            }
+
         }
 
         public void SetHull(Hull hull)
@@ -95,7 +101,7 @@ namespace HullRotate
                     Rectangle rect = new Rectangle();
                     rect.Height = RECT_SIZE;
                     rect.Width = RECT_SIZE;
-                    rect.Stroke = new SolidColorBrush(Colors.Black); ;
+                    rect.Stroke = new SolidColorBrush(Colors.Red); ;
                     rect.StrokeThickness = 1;
                     Canvas.SetTop(rect, points[ii, 1] - RECT_SIZE/2);
                     Canvas.SetLeft(rect, points[ii, 0] - RECT_SIZE/2);
@@ -181,6 +187,13 @@ namespace HullRotate
                 {
                     Console.WriteLine("Dropped at {0} {1}", m_dragX, m_dragY);
                     m_Dragging = false;
+
+                    //zzz TODO: 
+                    //      Need to scale and rotate the new point
+                    //      Need to place point back in bulkhead plain.
+                    //m_hull.GetBulkheadPoints(currBulkhead.SelectedIndex, points);
+                    m_hull.SetBulkheadPoint(currBulkhead.SelectedIndex, m_DraggingHandle, m_dragX, m_dragY, 0);
+                    Display();
                 }
             }
 
