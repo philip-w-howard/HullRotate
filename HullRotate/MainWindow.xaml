@@ -36,7 +36,9 @@
                     <Canvas Name="TopCanvas" Width="250" Height="150" Background="White" PreviewMouseDown="TopClick"/>
                 </Border>
             </StackPanel>
-        <Canvas Name="Perspective"/>
+            <Border BorderThickness="1" BorderBrush="Gray">
+                <Canvas Name="Perspective" PreviewMouseDown="Perspective_PreviewMouseDown" PreviewMouseMove="Perspective_PreviewMouseMove"/>
+            </Border>
         </DockPanel>
 
     </DockPanel>

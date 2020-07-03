@@ -56,6 +56,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Geometry.cs" />
+    <Compile Include="HullEditor.cs" />
     <Compile Include="HullWindow.xaml.cs">
       <DependentUpon>HullWindow.xaml</DependentUpon>
     </Compile>

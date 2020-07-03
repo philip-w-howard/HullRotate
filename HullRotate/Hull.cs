@@ -100,8 +100,6 @@ namespace HullRotate
 
         public void Draw(Canvas canvas)
         {
-            canvas.Children.Clear();
-
             // Get size
             double min_x = double.MaxValue;
             double min_y = double.MaxValue;
@@ -127,7 +125,7 @@ namespace HullRotate
 
             m_scale = scale1;
             if (scale2 < m_scale) m_scale = scale2;
-            m_scale = 0.8 * m_scale;
+            m_scale = 0.9 * m_scale;
 
             Console.WriteLine("Scale: {0}", m_scale);
 

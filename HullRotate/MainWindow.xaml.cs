@@ -21,11 +21,20 @@ namespace HullRotate
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Hull myHull;
+        protected double m_xAngle, m_yAngle, m_zAngle;
+        protected HullWindow m_frontHull;
+        protected HullWindow m_sideHull;
+        protected HullWindow m_topHull;
+
+        HullEditor m_hullEditor;
+
         public MainWindow()
         {
             InitializeComponent();
 
             myHull = new Hull();
+            m_hullEditor = new HullEditor(myHull, 0, 0, 0, Perspective);
         }
 
         private void openClick(object sender, RoutedEventArgs e)
@@ -46,6 +55,7 @@ namespace HullRotate
                     m_yAngle = 30;
                     m_zAngle = 190;
                     UpdateDrawings();
+                    m_hullEditor.IsEditable = false;
                 }
             }
         }
@@ -58,27 +68,34 @@ namespace HullRotate
         private void XClick(object sender, RoutedEventArgs e)
         {
             m_xAngle += 5;
-            myHull.RotateTo(m_xAngle, m_yAngle, m_zAngle);
-            myHull.Draw(Perspective);
+            m_hullEditor.SetRotation(m_xAngle, m_yAngle, m_zAngle);
+
+            m_hullEditor.IsEditable = false;
+            m_hullEditor.Display();
         }
 
         private void YClick(object sender, RoutedEventArgs e)
         {
             m_yAngle += 5;
-            myHull.RotateTo(m_xAngle, m_yAngle, m_zAngle);
-            myHull.Draw(Perspective);
+            m_hullEditor.SetRotation(m_xAngle, m_yAngle, m_zAngle);
+
+            m_hullEditor.IsEditable = false;
+            m_hullEditor.Display();
         }
 
         private void ZClick(object sender, RoutedEventArgs e)
         {
             m_zAngle += 5;
-            myHull.RotateTo(m_xAngle, m_yAngle, m_zAngle);
-            myHull.Draw(Perspective);
+            m_hullEditor.SetRotation(m_xAngle, m_yAngle, m_zAngle);
+
+            m_hullEditor.IsEditable = false;
+            m_hullEditor.Display();
         }
 
         private void cubeClick(object sender, RoutedEventArgs e)
         {
             myHull.UnitCube();
+            Perspective.Children.Clear();
             myHull.Draw(Perspective);
         }
 
@@ -86,7 +103,7 @@ namespace HullRotate
         {
             if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)
             {
-                Console.WriteLine("Front double clock");
+                Console.WriteLine("Front double click");
 
                 if (m_frontHull == null)
                 {
@@ -101,6 +118,9 @@ namespace HullRotate
                 m_xAngle = 0;
                 m_yAngle = 0;
                 m_zAngle = 180;
+
+                m_hullEditor.IsEditable = true;
+
                 UpdateDrawings();
             }
         }
@@ -122,6 +142,9 @@ namespace HullRotate
                 m_xAngle = 0;
                 m_yAngle = 90;
                 m_zAngle = 90;
+
+                m_hullEditor.IsEditable = true;
+
                 UpdateDrawings();
             }
         }
@@ -143,6 +166,9 @@ namespace HullRotate
                 m_xAngle = 0;
                 m_yAngle = 90;
                 m_zAngle = 180;
+
+                m_hullEditor.IsEditable = true;
+
                 UpdateDrawings();
             }
         }
@@ -150,16 +176,19 @@ namespace HullRotate
         private void UpdateDrawings()
         {
             myHull.RotateTo(0, 0, 180);
+            FrontCanvas.Children.Clear();
             myHull.Draw(FrontCanvas);
 
             myHull.RotateTo(0, 90, 180);
+            SideCanvas.Children.Clear();
             myHull.Draw(SideCanvas);
 
             myHull.RotateTo(0, 90, 90);
+            TopCanvas.Children.Clear();
             myHull.Draw(TopCanvas);
 
-            myHull.RotateTo(m_xAngle, m_yAngle, m_zAngle);
-            myHull.Draw(Perspective);
+            m_hullEditor.SetRotation(m_xAngle, m_yAngle, m_zAngle);
+            m_hullEditor.Display();
         }
 
         public void ChildClosing(string name)
@@ -172,10 +201,14 @@ namespace HullRotate
                 m_sideHull = null;
         }
 
-        private Hull myHull;
-        protected double m_xAngle, m_yAngle, m_zAngle;
-        protected HullWindow m_frontHull;
-        protected HullWindow m_sideHull;
-        protected HullWindow m_topHull;
+        private void Perspective_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            m_hullEditor.PreviewMouseDown(sender, e);
+        }
+
+        private void Perspective_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            m_hullEditor.PreviewMouseMove(sender, e);
+        }
     }
 }
