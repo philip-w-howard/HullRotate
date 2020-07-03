@@ -35,6 +35,15 @@
                 <Border BorderThickness="1" BorderBrush="Gray">
                     <Canvas Name="TopCanvas" Width="250" Height="150" Background="White" PreviewMouseDown="TopClick"/>
                 </Border>
+                <Border>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Bulkhead: " />
+                            <ComboBox Name="currBulkhead" SelectionChanged="ComboBox_SelectionChanged" />
+                        </StackPanel>
+                    </StackPanel>
+                   
+                </Border>
             </StackPanel>
             <Border BorderThickness="1" BorderBrush="Gray">
                 <Canvas Name="Perspective" PreviewMouseDown="Perspective_PreviewMouseDown" PreviewMouseMove="Perspective_PreviewMouseMove"/>

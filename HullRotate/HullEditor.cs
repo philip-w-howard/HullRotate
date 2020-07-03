@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace HullRotate
@@ -21,10 +22,10 @@ namespace HullRotate
         protected int m_DraggingHandle;
         protected double m_dragX;
         protected double m_dragY;
-        public int currBulkhead { get;  set; }
-        public bool IsEditable { get; set; } 
+        public int currBulkhead { get; set; }
+        public bool IsEditable { get; set; }
         const int RECT_SIZE = 8;
-        
+
         public HullEditor(Hull hull, double x, double y, double z, Canvas canvas)
         {
             m_hull = hull;
@@ -153,6 +154,36 @@ namespace HullRotate
                 Console.WriteLine("Moved {0} to {1},{2}", m_DraggingHandle, loc.X, loc.Y);
             }
         }
+        public void Bulkhead_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int bulkhead;
+            double[,] points = new double[m_hull.numChines, 2];
+            if (IsEditable)
+            {
+                bulkhead = ((ComboBox)sender).SelectedIndex;
+                Console.WriteLine("Selected " + bulkhead);
 
+                Display();
+
+                m_hull.GetBulkheadPoints(bulkhead, points);
+
+                m_handle = new Rectangle[m_hull.numChines];
+
+                for (int ii = 0; ii < m_hull.numChines; ii++)
+                {
+                    Rectangle rect = new Rectangle();
+                    rect.Height = RECT_SIZE;
+                    rect.Width = RECT_SIZE;
+                    rect.Stroke = new SolidColorBrush(Colors.Red); ;
+                    rect.StrokeThickness = 1;
+                    Canvas.SetTop(rect, points[ii, 1] - RECT_SIZE / 2);
+                    Canvas.SetLeft(rect, points[ii, 0] - RECT_SIZE / 2);
+                    m_canvas.Children.Add(rect);
+
+                    m_handle[ii] = rect;
+                }
+            }
+
+        }
     }
 }

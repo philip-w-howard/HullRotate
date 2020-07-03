@@ -51,6 +51,13 @@ namespace HullRotate
                     Console.WriteLine(result);
                 else
                 {
+                    currBulkhead.Items.Clear();
+                    
+                    for (int ii = 1; ii < myHull.numBulkheads + 1; ii++)
+                    {
+                        currBulkhead.Items.Add(ii);
+                    }
+
                     m_xAngle = 10;
                     m_yAngle = 30;
                     m_zAngle = 190;
@@ -199,6 +206,11 @@ namespace HullRotate
                 m_frontHull = null;
             else if (name == "Side")
                 m_sideHull = null;
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            m_hullEditor.Bulkhead_SelectionChanged(sender, e);
         }
 
         private void Perspective_PreviewMouseDown(object sender, MouseButtonEventArgs e)
