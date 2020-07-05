@@ -34,7 +34,7 @@ namespace HullRotate
             InitializeComponent();
 
             myHull = new Hull();
-            m_hullEditor = new HullEditor(myHull, 0, 0, 0, Perspective);
+            //m_hullEditor = new HullEditor(myHull, 0, 0, 0, Perspective);
         }
 
         private void openClick(object sender, RoutedEventArgs e)
@@ -57,6 +57,8 @@ namespace HullRotate
                     {
                         currBulkhead.Items.Add(ii);
                     }
+
+                    m_hullEditor = new HullEditor(myHull, 0, 0, 0, Perspective);
 
                     m_xAngle = 10;
                     m_yAngle = 30;
@@ -182,20 +184,23 @@ namespace HullRotate
 
         private void UpdateDrawings()
         {
-            myHull.RotateTo(0, 0, 180);
-            FrontCanvas.Children.Clear();
-            myHull.Draw(FrontCanvas);
+            if (m_hullEditor != null)
+            {
+                myHull.RotateTo(0, 0, 180);
+                FrontCanvas.Children.Clear();
+                myHull.Draw(FrontCanvas);
 
-            myHull.RotateTo(0, 90, 180);
-            SideCanvas.Children.Clear();
-            myHull.Draw(SideCanvas);
+                myHull.RotateTo(0, 90, 180);
+                SideCanvas.Children.Clear();
+                myHull.Draw(SideCanvas);
 
-            myHull.RotateTo(0, 90, 90);
-            TopCanvas.Children.Clear();
-            myHull.Draw(TopCanvas);
+                myHull.RotateTo(0, 90, 90);
+                TopCanvas.Children.Clear();
+                myHull.Draw(TopCanvas);
 
-            m_hullEditor.SetRotation(m_xAngle, m_yAngle, m_zAngle);
-            m_hullEditor.Display();
+                m_hullEditor.SetRotation(m_xAngle, m_yAngle, m_zAngle);
+                m_hullEditor.Display();
+            }
         }
 
         public void ChildClosing(string name)
@@ -213,14 +218,20 @@ namespace HullRotate
             m_hullEditor.Bulkhead_SelectionChanged(sender, e);
         }
 
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateDrawings();
+        }
+
         private void Perspective_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            m_hullEditor.PreviewMouseDown(sender, e);
+            Console.WriteLine("PriviewMouseDown: " + e);
+            if (m_hullEditor != null) m_hullEditor.PreviewMouseDown(sender, e);
         }
 
         private void Perspective_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            m_hullEditor.PreviewMouseMove(sender, e);
+            if (m_hullEditor != null) m_hullEditor.PreviewMouseMove(sender, e);
         }
     }
 }

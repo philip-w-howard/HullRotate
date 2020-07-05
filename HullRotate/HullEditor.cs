@@ -58,6 +58,8 @@ namespace HullRotate
             m_hull.RotateTo(m_rotate_x, m_rotate_y, m_rotate_z);
             m_canvas.Children.Clear();
             m_hull.Draw(m_canvas);
+
+            if (IsEditable) DrawHandles();
         }
 
         public void PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -65,7 +67,7 @@ namespace HullRotate
             Point loc = e.GetPosition(m_canvas);
 
             Console.WriteLine("Preview Mouse Down {0},{1}", loc.X, loc.Y);
-            if (m_handle == null) return;
+            if (m_handle == null || m_handle[0] == null) return;
 
             if (e.ButtonState == MouseButtonState.Pressed)
             {
@@ -136,6 +138,11 @@ namespace HullRotate
                     m_hull.SetBulkheadPoint(currBulkhead, m_DraggingHandle, m_dragX, m_dragY, 0);
                     Display();
                 }
+                else
+                {
+                    Console.WriteLine("non-dragging MouseUP");
+                    
+                }
             }
 
         }
@@ -156,34 +163,37 @@ namespace HullRotate
         }
         public void Bulkhead_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int bulkhead;
-            double[,] points = new double[m_hull.numChines, 2];
             if (IsEditable)
             {
-                bulkhead = ((ComboBox)sender).SelectedIndex;
-                Console.WriteLine("Selected " + bulkhead);
+                currBulkhead = ((ComboBox)sender).SelectedIndex;
+                Console.WriteLine("Selected " + currBulkhead);
 
                 Display();
+             }
 
-                m_hull.GetBulkheadPoints(bulkhead, points);
+        }
 
-                m_handle = new Rectangle[m_hull.numChines];
+        protected void DrawHandles()
+        {
+            double[,] points = new double[m_hull.numChines, 2];
 
-                for (int ii = 0; ii < m_hull.numChines; ii++)
-                {
-                    Rectangle rect = new Rectangle();
-                    rect.Height = RECT_SIZE;
-                    rect.Width = RECT_SIZE;
-                    rect.Stroke = new SolidColorBrush(Colors.Red); ;
-                    rect.StrokeThickness = 1;
-                    Canvas.SetTop(rect, points[ii, 1] - RECT_SIZE / 2);
-                    Canvas.SetLeft(rect, points[ii, 0] - RECT_SIZE / 2);
-                    m_canvas.Children.Add(rect);
+            m_hull.GetBulkheadPoints(currBulkhead, points);
 
-                    m_handle[ii] = rect;
-                }
+            m_handle = new Rectangle[m_hull.numChines];
+
+            for (int ii = 0; ii < m_hull.numChines; ii++)
+            {
+                Rectangle rect = new Rectangle();
+                rect.Height = RECT_SIZE;
+                rect.Width = RECT_SIZE;
+                rect.Stroke = new SolidColorBrush(Colors.Red); ;
+                rect.StrokeThickness = 1;
+                Canvas.SetTop(rect, points[ii, 1] - RECT_SIZE / 2);
+                Canvas.SetLeft(rect, points[ii, 0] - RECT_SIZE / 2);
+                m_canvas.Children.Add(rect);
+
+                m_handle[ii] = rect;
             }
-
         }
     }
 }

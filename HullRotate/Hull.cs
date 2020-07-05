@@ -214,7 +214,6 @@ namespace HullRotate
         }
         protected void PrepareDrawing()
         {
-
             m_drawnBulkheads = new double[m_bulkheads.GetLength(0)][,];
             int centerChine = m_bulkheads[0].GetLength(0);
 

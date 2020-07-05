@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HullRotate"
         mc:Ignorable="d"
-        Title="Hull Rotator" Height="650" Width="800">
+        Title="Hull Rotator" Height="650" Width="800" SizeChanged="Window_SizeChanged">
     <DockPanel>
         <ToolBarTray Background="White" DockPanel.Dock="Top">
             <ToolBar Band="0
@@ -46,7 +46,8 @@
                 </Border>
             </StackPanel>
             <Border BorderThickness="1" BorderBrush="Gray">
-                <Canvas Name="Perspective" PreviewMouseDown="Perspective_PreviewMouseDown" PreviewMouseMove="Perspective_PreviewMouseMove"/>
+                <Canvas Background="White" 
+                        Name="Perspective" PreviewMouseDown="Perspective_PreviewMouseDown" PreviewMouseUp="Perspective_PreviewMouseDown" PreviewMouseMove="Perspective_PreviewMouseMove"/>
             </Border>
         </DockPanel>
 
