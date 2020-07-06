@@ -14,7 +14,6 @@
                     <MenuItem Header="_File">
                         <MenuItem Header="Open" Click="openClick"/>
                         <MenuItem Header="Save" Click="saveClick"/>
-                        <MenuItem Header="Cube" Click="cubeClick"/>
                     </MenuItem>
                 </Menu>
             </ToolBar>

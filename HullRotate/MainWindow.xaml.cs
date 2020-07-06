@@ -117,13 +117,6 @@ namespace HullRotate
             //m_hullEditor.Display();
         }
 
-        private void cubeClick(object sender, RoutedEventArgs e)
-        {
-            myHull.UnitCube();
-            Perspective.Children.Clear();
-            //myHull.Draw(Perspective);
-        }
-
         private void FrontClick(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)
