@@ -55,9 +55,9 @@ namespace HullRotate
 
         public void Display()
         {
-            m_hull.RotateTo(m_rotate_x, m_rotate_y, m_rotate_z);
+            //m_hull.RotateTo(m_rotate_x, m_rotate_y, m_rotate_z);
             m_canvas.Children.Clear();
-            m_hull.Draw(m_canvas);
+            //m_hull.Draw(m_canvas);
 
             if (IsEditable) DrawHandles();
         }
@@ -177,7 +177,7 @@ namespace HullRotate
         {
             double[,] points = new double[m_hull.numChines, 2];
 
-            m_hull.GetBulkheadPoints(currBulkhead, points);
+           // m_hull.GetBulkheadPoints(currBulkhead, points);
 
             m_handle = new Rectangle[m_hull.numChines];
 

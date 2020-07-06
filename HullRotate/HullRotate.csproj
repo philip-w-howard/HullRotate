@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DisplayHull.cs" />
     <Compile Include="Geometry.cs" />
     <Compile Include="HullEditor.cs" />
     <Compile Include="HullWindow.xaml.cs">

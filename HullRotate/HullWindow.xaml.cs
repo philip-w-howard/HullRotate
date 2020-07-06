@@ -52,9 +52,9 @@ namespace HullRotate
 
         public void Display()
         {
-            m_hull.RotateTo(m_rotate_x, m_rotate_y, m_rotate_z);
+           // m_hull.RotateTo(m_rotate_x, m_rotate_y, m_rotate_z);
             HullCanvas.Children.Clear();
-            m_hull.Draw(HullCanvas);
+            //m_hull.Draw(HullCanvas);
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -94,7 +94,7 @@ namespace HullRotate
 
                 Display();
 
-                m_hull.GetBulkheadPoints(bulkhead, points);
+               // m_hull.GetBulkheadPoints(bulkhead, points);
 
                 m_handle = new Rectangle[m_hull.numChines];
 
