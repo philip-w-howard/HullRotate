@@ -81,7 +81,13 @@ namespace HullRotate
         {
             m_bulkheads[bulkhead][chine, 0] = x;
             m_bulkheads[bulkhead][chine, 1] = y;
-            //m_bulkheads[bulkhead][chine, 2] = z;
+            m_bulkheads[bulkhead][chine, 2] = z;
+        }
+        public void ShiftBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
+        {
+            m_bulkheads[bulkhead][chine, 0] += x;
+            m_bulkheads[bulkhead][chine, 1] += y;
+            m_bulkheads[bulkhead][chine, 2] += z;
         }
     }
 }

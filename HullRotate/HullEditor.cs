@@ -13,21 +13,24 @@ namespace HullRotate
 {
     class HullEditor
     {
-        protected DisplayHull m_hull;
+        const int RECT_SIZE = 8;
 
+        protected DisplayHull m_hull;
         protected Rectangle[] m_handle;
         protected bool m_Dragging;
         protected int m_DraggingHandle;
-        protected double m_dragX;
-        protected double m_dragY;
+        protected double m_dragX, m_dragY;
+        protected double m_startX, m_startY;
+
         public int currBulkhead { get; set; }
         public bool IsEditable { get; set; }
-        const int RECT_SIZE = 8;
+        public bool LockX { get; set; }
 
         public HullEditor(DisplayHull hull)
         {
             m_hull = hull;
             IsEditable = false;
+            LockX = false;
 
             m_handle = new Rectangle[m_hull.numChines];
         }
@@ -57,7 +60,7 @@ namespace HullRotate
             {
                 if (m_Dragging)
                 {
-                    m_dragX = loc.X;
+                    if (!LockX) m_dragX = loc.X;
                     m_dragY = loc.Y;
 
                     m_handle[m_DraggingHandle].SetValue(Canvas.TopProperty, m_dragY - RECT_SIZE / 2);
@@ -81,19 +84,14 @@ namespace HullRotate
                     m_dragX = loc.X;
                     m_dragY = loc.Y;
 
+                    m_startX = loc.X;
+                    m_startY = loc.Y;
+
                     Console.WriteLine("Checking for MouseOver");
                     for (int ii = 0; ii < m_handle.Length; ii++)
                     {
                         Console.WriteLine("Checking {0},{1}",
                             m_handle[ii].GetValue(Canvas.LeftProperty), m_handle[ii].GetValue(Canvas.TopProperty));
-
-                        if (m_handle[ii].IsMouseOver)
-                        {
-                            m_DraggingHandle = ii;
-                            m_Dragging = true;
-                            Console.WriteLine("Mouse over {0} {1},{2}", ii, m_dragX, m_dragY);
-                            break;
-                        }
 
                         double x = (double)m_handle[ii].GetValue(Canvas.LeftProperty);
                         double y = (double)m_handle[ii].GetValue(Canvas.TopProperty);
@@ -112,14 +110,14 @@ namespace HullRotate
             {
                 if (m_Dragging)
                 {
-                    Console.WriteLine("Dropped at {0} {1}", m_dragX, m_dragY);
+                    Console.WriteLine("Dropped at {0} {1} ({2}, {3})", m_dragX, m_dragY, m_startX, m_startY);
                     m_Dragging = false;
 
                     //zzz TODO: 
                     //      Need to scale and rotate the new point
                     //      Need to place point back in bulkhead plain.
                     //m_hull.GetBulkheadPoints(currBulkhead, points);
-                    //m_hull.SetBulkheadPoint(currBulkhead, m_DraggingHandle, m_dragX, m_dragY, 0);
+                    m_hull.ShiftBulkheadPoint(currBulkhead, m_DraggingHandle, m_startX - m_dragX, m_startY - m_dragY, 0);
                     Draw();
                 }
                 else
@@ -134,7 +132,7 @@ namespace HullRotate
             if (m_Dragging)
             {
                 Point loc = e.GetPosition(m_hull.canvas);
-                m_dragX = loc.X;
+                if (!LockX) m_dragX = loc.X;
                 m_dragY = loc.Y;
 
                 m_handle[m_DraggingHandle].SetValue(Canvas.TopProperty, m_dragY - RECT_SIZE / 2);

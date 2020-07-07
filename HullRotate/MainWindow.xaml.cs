@@ -87,6 +87,7 @@ namespace HullRotate
         {
             m_xAngle += 5;
             m_PerspectiveDisplay.RotateTo(m_xAngle, m_yAngle, m_zAngle);
+            m_PerspectiveDisplay.Scale();
 
             m_hullEditor.IsEditable = false;
             m_hullEditor.Draw();
@@ -96,6 +97,7 @@ namespace HullRotate
         {
             m_yAngle += 5;
             m_PerspectiveDisplay.RotateTo(m_xAngle, m_yAngle, m_zAngle);
+            m_PerspectiveDisplay.Scale();
 
             m_hullEditor.IsEditable = false;
             m_hullEditor.Draw();
@@ -105,6 +107,7 @@ namespace HullRotate
         {
             m_zAngle += 5;
             m_PerspectiveDisplay.RotateTo(m_xAngle, m_yAngle, m_zAngle);
+            m_PerspectiveDisplay.Scale();
 
             //m_hullEditor.IsEditable = false;
             m_hullEditor.Draw();
@@ -131,6 +134,7 @@ namespace HullRotate
                 m_zAngle = 180;
 
                 m_hullEditor.IsEditable = true;
+                m_hullEditor.LockX = false;
 
                 UpdateDrawings();
             }
@@ -155,6 +159,7 @@ namespace HullRotate
                 m_zAngle = 90;
 
                 m_hullEditor.IsEditable = true;
+                m_hullEditor.LockX = true;
 
                 UpdateDrawings();
             }
@@ -179,6 +184,7 @@ namespace HullRotate
                 m_zAngle = 180;
 
                 m_hullEditor.IsEditable = true;
+                m_hullEditor.LockX = true;
 
                 UpdateDrawings();
             }
@@ -189,15 +195,19 @@ namespace HullRotate
             if (m_FrontDisplay != null)
             {
                 m_FrontDisplay.RotateTo(0, 0, 180);
+                m_FrontDisplay.Scale();
                 m_FrontDisplay.Draw();
 
                 m_SideDisplay.RotateTo(0, 90, 180);
+                m_SideDisplay.Scale();
                 m_SideDisplay.Draw();
 
                 m_TopDisplay.RotateTo(0, 90, 90);
+                m_TopDisplay.Scale();
                 m_TopDisplay.Draw();
 
                 m_PerspectiveDisplay.RotateTo(m_xAngle, m_yAngle, m_zAngle);
+                m_PerspectiveDisplay.Scale();
                 m_hullEditor.Draw();
             }
         }

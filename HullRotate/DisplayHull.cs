@@ -23,6 +23,7 @@ namespace HullRotate
         public int numChines { get { return m_Hull.numChines; } }
         public int numBulkheads { get { return m_Hull.numBulkheads; } }
         public Canvas canvas {  get { return m_Canvas; } }
+        public double scale { get { return m_scale; } }
 
         public DisplayHull(Hull hull, Canvas canvas)
         {
@@ -58,9 +59,9 @@ namespace HullRotate
                     m_drawnBulkheads[bulkhead][chine + centerChine, 0] *= -1;
                 }
             }
-
         }
-        public void Draw()
+
+        public void Scale()
         {
             // Get size
             double min_x = double.MaxValue;
@@ -112,7 +113,10 @@ namespace HullRotate
             }
 
             CenterTo(m_Canvas.ActualWidth / 2, m_Canvas.ActualHeight / 2, 0);
+        }
 
+        public void Draw()
+        {
             m_Canvas.Children.Clear();
 
             for (int bulkhead = 0; bulkhead < m_Hull.numBulkheads; bulkhead++)
@@ -339,13 +343,15 @@ namespace HullRotate
             }
         }
 
-        //public void SetBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
-        //{
-        //    m_bulkheads[bulkhead][chine, 0] = x;
-        //    m_bulkheads[bulkhead][chine, 1] = y;
-        //    //m_bulkheads[bulkhead][chine, 2] = z;
-        //    PrepareDrawing();
-        //}
+        public void ShiftBulkheadPoint(int bulkhead, int chine, double x, double y, double z)
+        {
+            Console.WriteLine("Shift Bulkhead: {0} {1} ({2},{3},{4}): {5}", bulkhead, chine, x * m_scale, y * m_scale, z * m_scale, m_scale);
+            m_Hull.ShiftBulkheadPoint(bulkhead, chine, x / m_scale, y / m_scale, z / m_scale);
+            LoadBulkheads();
+            RotateTo(m_rotate_x, m_rotate_y, m_rotate_z);
+            Scale();
+            Draw();
+        }
 
     }
 }
