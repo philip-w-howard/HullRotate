@@ -13,9 +13,7 @@ namespace HullRotate
 {
     class HullEditor
     {
-        protected Hull m_hull;
-        protected double m_rotate_x, m_rotate_y, m_rotate_z;
-        protected Canvas m_canvas;
+        protected DisplayHull m_hull;
 
         protected Rectangle[] m_handle;
         protected bool m_Dragging;
@@ -26,45 +24,31 @@ namespace HullRotate
         public bool IsEditable { get; set; }
         const int RECT_SIZE = 8;
 
-        public HullEditor(Hull hull, double x, double y, double z, Canvas canvas)
+        public HullEditor(DisplayHull hull)
         {
             m_hull = hull;
-            m_rotate_x = x;
-            m_rotate_y = y;
-            m_rotate_z = z;
-
-            m_canvas = canvas;
             IsEditable = false;
 
             m_handle = new Rectangle[m_hull.numChines];
         }
 
-        public void SetHull(Hull hull)
+        public void SetHull(DisplayHull hull)
         {
             m_hull = hull;
-
+            IsEditable = false;
             m_handle = new Rectangle[m_hull.numChines];
         }
 
-        public void SetRotation(double x, double y, double z)
+        public void Draw()
         {
-            m_rotate_x = x;
-            m_rotate_y = y;
-            m_rotate_z = z;
-        }
-
-        public void Display()
-        {
-            //m_hull.RotateTo(m_rotate_x, m_rotate_y, m_rotate_z);
-            m_canvas.Children.Clear();
-            //m_hull.Draw(m_canvas);
+            m_hull.Draw();
 
             if (IsEditable) DrawHandles();
         }
 
         public void PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Point loc = e.GetPosition(m_canvas);
+            Point loc = e.GetPosition(m_hull.canvas);
 
             Console.WriteLine("Preview Mouse Down {0},{1}", loc.X, loc.Y);
             if (m_handle == null || m_handle[0] == null) return;
@@ -135,23 +119,21 @@ namespace HullRotate
                     //      Need to scale and rotate the new point
                     //      Need to place point back in bulkhead plain.
                     //m_hull.GetBulkheadPoints(currBulkhead, points);
-                    m_hull.SetBulkheadPoint(currBulkhead, m_DraggingHandle, m_dragX, m_dragY, 0);
-                    Display();
+                    //m_hull.SetBulkheadPoint(currBulkhead, m_DraggingHandle, m_dragX, m_dragY, 0);
+                    Draw();
                 }
                 else
                 {
                     Console.WriteLine("non-dragging MouseUP");
-                    
                 }
             }
-
         }
 
         public void PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (m_Dragging)
             {
-                Point loc = e.GetPosition(m_canvas);
+                Point loc = e.GetPosition(m_hull.canvas);
                 m_dragX = loc.X;
                 m_dragY = loc.Y;
 
@@ -168,16 +150,15 @@ namespace HullRotate
                 currBulkhead = ((ComboBox)sender).SelectedIndex;
                 Console.WriteLine("Selected " + currBulkhead);
 
-                Display();
+                Draw();
              }
-
         }
 
         protected void DrawHandles()
         {
             double[,] points = new double[m_hull.numChines, 2];
 
-           // m_hull.GetBulkheadPoints(currBulkhead, points);
+            m_hull.GetBulkheadPoints(currBulkhead, points);
 
             m_handle = new Rectangle[m_hull.numChines];
 
@@ -190,7 +171,7 @@ namespace HullRotate
                 rect.StrokeThickness = 1;
                 Canvas.SetTop(rect, points[ii, 1] - RECT_SIZE / 2);
                 Canvas.SetLeft(rect, points[ii, 0] - RECT_SIZE / 2);
-                m_canvas.Children.Add(rect);
+                m_hull.canvas.Children.Add(rect);
 
                 m_handle[ii] = rect;
             }

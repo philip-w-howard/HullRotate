@@ -20,6 +20,10 @@ namespace HullRotate
         private Canvas m_Canvas;
         private Hull m_Hull;
 
+        public int numChines { get { return m_Hull.numChines; } }
+        public int numBulkheads { get { return m_Hull.numBulkheads; } }
+        public Canvas canvas {  get { return m_Canvas; } }
+
         public DisplayHull(Hull hull, Canvas canvas)
         {
             m_Hull = hull;
