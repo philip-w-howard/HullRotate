@@ -27,7 +27,8 @@ namespace HullRotate
         protected HullWindow m_sideHull;
         protected HullWindow m_topHull;
 
-        protected DisplayHull m_FrontDisplay, m_SideDisplay, m_TopDisplay, m_PerspectiveDisplay;
+        //protected DisplayHull m_FrontDisplay, m_PerspectiveDisplay;
+        protected DisplayHull m_SideDisplay, m_TopDisplay;
 
         HullEditor m_hullEditor;
 
@@ -65,10 +66,13 @@ namespace HullRotate
                     m_yAngle = 30;
                     m_zAngle = 190;
 
-                    m_FrontDisplay = new DisplayHull(myHull, FrontCanvas);
+                    m_FrontDisplay.SetHull(myHull);
+                    m_PerspectiveDisplay.SetHull(myHull);
+
+                    //m_FrontDisplay = new DisplayHull(myHull, FrontCanvas);
                     m_SideDisplay = new DisplayHull(myHull, SideCanvas);
                     m_TopDisplay = new DisplayHull(myHull, TopCanvas);
-                    m_PerspectiveDisplay = new DisplayHull(myHull, Perspective);
+                    //m_PerspectiveDisplay = new DisplayHull(myHull, Perspective);
 
                     m_hullEditor = new HullEditor(m_PerspectiveDisplay);
 
@@ -192,7 +196,7 @@ namespace HullRotate
 
         private void UpdateDrawings()
         {
-            if (m_FrontDisplay != null)
+            if (m_SideDisplay != null)
             {
                 m_FrontDisplay.RotateTo(0, 0, 180);
                 m_FrontDisplay.Scale();

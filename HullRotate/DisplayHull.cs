@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace HullRotate
 {
-    public class DisplayHull
+    public class DisplayHull : FrameworkElement
     {
         private double[][,] m_chines;           // [chine][index, axis]
         private double[][,] m_drawnBulkheads;   // [bulkhead][chine, axis]
@@ -17,21 +20,68 @@ namespace HullRotate
         private double m_rotate_x, m_rotate_y, m_rotate_z;
         private double m_translate_x, m_translate_y, m_translate_z;
         private double m_scale;
-        private Canvas m_Canvas;
+        //private Canvas m_Canvas;
         private Hull m_Hull;
 
         public int numChines { get { return m_Hull.numChines; } }
         public int numBulkheads { get { return m_Hull.numBulkheads; } }
-        public Canvas canvas {  get { return m_Canvas; } }
+        //public Canvas canvas {  get { return m_Canvas; } }
         public double scale { get { return m_scale; } }
+
+        public DisplayHull()
+        { }
 
         public DisplayHull(Hull hull, Canvas canvas)
         {
             m_Hull = hull;
-            m_Canvas = canvas;
+            //m_Canvas = canvas;
 
             LoadBulkheads();
             PrepareChines();
+        }
+
+        public void SetHull(Hull hull)
+        {
+            m_Hull = hull;
+            LoadBulkheads();
+            PrepareChines();
+            Draw();
+        }
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            if (m_Hull == null) return;
+
+            Debug.WriteLine("OnRender");
+            //            drawingContext.DrawRectangle(Brushes.Red, null, new Rect(0, 0, 100, 50));
+
+            Pen pen = new Pen(System.Windows.Media.Brushes.Black, 1.0);
+
+            for (int bulkhead = 0; bulkhead < m_Hull.numBulkheads; bulkhead++)
+            {
+                for (int chine = 0; chine < m_drawnBulkheads[bulkhead].GetLength(0) - 1; chine++)
+                {
+                    if (chine != m_drawnBulkheads[bulkhead].GetLength(0) / 2 - 1)
+                    {
+                        Point p1 = new Point(m_drawnBulkheads[bulkhead][chine, 0], m_drawnBulkheads[bulkhead][chine, 1]);
+                        Point p2 = new Point(m_drawnBulkheads[bulkhead][chine + 1, 0], m_drawnBulkheads[bulkhead][chine + 1, 1]);
+
+                        drawingContext.DrawLine(pen, p1, p2);
+                    }
+                }
+            }
+
+            pen = new Pen(System.Windows.Media.Brushes.Gray, 1.0);
+
+            for (int chine = 0; chine < m_Hull.numChines * 2; chine++)
+            {
+                for (int point = 0; point < POINTS_PER_CHINE - 2; point++)
+                {
+                    Point p1 = new Point(m_chines[chine][point, 0], m_chines[chine][point, 1]);
+                    Point p2 = new Point(m_chines[chine][point + 1, 0], m_chines[chine][point + 1, 1]);
+
+                    drawingContext.DrawLine(pen, p1, p2);
+                }
+            }
         }
 
         private void LoadBulkheads()
@@ -83,8 +133,8 @@ namespace HullRotate
             }
 
             // Scale all the points to fit in the canvas
-            double scale1 = m_Canvas.ActualWidth / (max_x - min_x);
-            double scale2 = m_Canvas.ActualHeight / (max_y - min_y);
+            double scale1 = ActualWidth / (max_x - min_x);
+            double scale2 = ActualHeight / (max_y - min_y);
 
             m_scale = scale1;
             if (scale2 < m_scale) m_scale = scale2;
@@ -112,53 +162,55 @@ namespace HullRotate
                 }
             }
 
-            CenterTo(m_Canvas.ActualWidth / 2, m_Canvas.ActualHeight / 2, 0);
+            CenterTo(ActualWidth / 2, ActualHeight / 2, 0);
         }
 
         public void Draw()
         {
-            m_Canvas.Children.Clear();
+            InvalidateVisual();
 
-            for (int bulkhead = 0; bulkhead < m_Hull.numBulkheads; bulkhead++)
-            {
-                for (int chine = 0; chine < m_drawnBulkheads[bulkhead].GetLength(0) - 1; chine++)
-                {
-                    if (chine != m_drawnBulkheads[bulkhead].GetLength(0) / 2 - 1)
-                    {
-                        Line myLine = new Line();
+            //m_Canvas.Children.Clear();
 
-                        myLine.Stroke = System.Windows.Media.Brushes.Black;
+            //for (int bulkhead = 0; bulkhead < m_Hull.numBulkheads; bulkhead++)
+            //{
+            //    for (int chine = 0; chine < m_drawnBulkheads[bulkhead].GetLength(0) - 1; chine++)
+            //    {
+            //        if (chine != m_drawnBulkheads[bulkhead].GetLength(0) / 2 - 1)
+            //        {
+            //            Line myLine = new Line();
 
-                        myLine.X1 = m_drawnBulkheads[bulkhead][chine, 0];
-                        myLine.X2 = m_drawnBulkheads[bulkhead][chine + 1, 0];
-                        myLine.Y1 = m_drawnBulkheads[bulkhead][chine, 1];
-                        myLine.Y2 = m_drawnBulkheads[bulkhead][chine + 1, 1];
+            //            myLine.Stroke = System.Windows.Media.Brushes.Black;
 
-                        myLine.StrokeThickness = 1;
+            //            myLine.X1 = m_drawnBulkheads[bulkhead][chine, 0];
+            //            myLine.X2 = m_drawnBulkheads[bulkhead][chine + 1, 0];
+            //            myLine.Y1 = m_drawnBulkheads[bulkhead][chine, 1];
+            //            myLine.Y2 = m_drawnBulkheads[bulkhead][chine + 1, 1];
 
-                        m_Canvas.Children.Add(myLine);
-                    }
-                }
-            }
+            //            myLine.StrokeThickness = 1;
 
-            for (int chine = 0; chine < m_Hull.numChines * 2; chine++)
-            {
-                for (int point = 0; point < POINTS_PER_CHINE - 2; point++)
-                {
-                    Line myLine = new Line();
+            //            m_Canvas.Children.Add(myLine);
+            //        }
+            //    }
+            //}
 
-                    myLine.Stroke = System.Windows.Media.Brushes.Gray;
+            //for (int chine = 0; chine < m_Hull.numChines * 2; chine++)
+            //{
+            //    for (int point = 0; point < POINTS_PER_CHINE - 2; point++)
+            //    {
+            //        Line myLine = new Line();
 
-                    myLine.X1 = m_chines[chine][point, 0];
-                    myLine.X2 = m_chines[chine][point + 1, 0];
-                    myLine.Y1 = m_chines[chine][point, 1];
-                    myLine.Y2 = m_chines[chine][point + 1, 1];
+            //        myLine.Stroke = System.Windows.Media.Brushes.Gray;
 
-                    myLine.StrokeThickness = 1;
+            //        myLine.X1 = m_chines[chine][point, 0];
+            //        myLine.X2 = m_chines[chine][point + 1, 0];
+            //        myLine.Y1 = m_chines[chine][point, 1];
+            //        myLine.Y2 = m_chines[chine][point + 1, 1];
 
-                    m_Canvas.Children.Add(myLine);
-                }
-            }
+            //        myLine.StrokeThickness = 1;
+
+            //        m_Canvas.Children.Add(myLine);
+            //    }
+            //}
         }
         protected void PrepareChines()
         {

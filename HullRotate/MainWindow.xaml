@@ -26,7 +26,8 @@
         <DockPanel>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
                 <Border BorderThickness="1" BorderBrush="Gray">
-                    <Canvas Name="FrontCanvas" Width="150" Height="150" Background="White" PreviewMouseDown="FrontClick"/>
+                    <!--<Canvas Name="FrontCanvas" Width="150" Height="150" Background="White" PreviewMouseDown="FrontClick"/>-->
+                    <local:DisplayHull x:Name="m_FrontDisplay" Width="150" Height="150" />
                 </Border>
                 <Border BorderThickness="1" BorderBrush="Gray">
                     <Canvas Name="SideCanvas" Width="250" Height="150" Background="White" PreviewMouseDown="SideClick"/>
@@ -45,8 +46,8 @@
                 </Border>
             </StackPanel>
             <Border BorderThickness="1" BorderBrush="Gray">
-                <Canvas Background="White" 
-                        Name="Perspective" PreviewMouseDown="Perspective_PreviewMouseDown" PreviewMouseUp="Perspective_PreviewMouseDown" PreviewMouseMove="Perspective_PreviewMouseMove"/>
+                <local:DisplayHull x:Name="m_PerspectiveDisplay" 
+                     PreviewMouseDown="Perspective_PreviewMouseDown" PreviewMouseUp="Perspective_PreviewMouseDown" PreviewMouseMove="Perspective_PreviewMouseMove"/>
             </Border>
         </DockPanel>
 

@@ -1,12 +1,32 @@
-﻿xxx Display splines
-Compute planes for bulkheads
-Edit points
-   x,y: Pick bulkhead and highlight
-   Move point on screen plane
-   Adjust to be in bulkhead plane
+﻿When updating drawing, update all views.
+Allow click to select a bulkhead for editing.
 
-   Bulkhead zero: move in side view.
+Dynamically update views while moving handle.
+Handle bow/stern correctly.
+
+mark bow/stern as bow/stern vs. transom
+Spline bulkhead for bow/stern
+
+Compute planes for bulkheads
+
 Add/position bulkheads
 Splines.GetAt(coord)
 
-Spline bulkhead 0 (and N?)
+Visual Layer Programming: 
+    can be used for auto-redraw?
+	also DrawingBrush
+3D: figure out how WPF does this.
+
+<Path Fill="Cyan" Stroke="Black" Data="M 0,0 L 50,0 50,50 0,50 Z" />
+
+Fill with DrawingBrush: can include paths.
+    Can scale & clip as needed for window.
+
+OnRender method renders a visual
+
+class MyFramedTextRenderer : FrameworkElement {
+protected override void OnRender(DrawingContext drawingContext) {
+
+InvalidateVisual causes OnRender to be re-called.
+MeasureOverride
+ArrangeOverride
